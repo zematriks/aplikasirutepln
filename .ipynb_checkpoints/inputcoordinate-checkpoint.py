@@ -1,7 +1,10 @@
 import tkinter as tk
+
+# Simple GUI to collect multiple longitude/latitude pairs,
+# format them as a Python list of lists and allow copying to clipboard.
+
 def main():
     coords = []
-    vehicle_start = None
 
     def format_coords():
         lines = []
@@ -36,23 +39,6 @@ def main():
         latitude_entry.delete(0, tk.END)
         status_label.config(text=f"Last added: [{lon:.8f}, {lat:.8f}]", fg="black")
         update_display()
-        
-    def addtostart():
-        nonlocal vehicle_start
-        lon_st = longitude_entry2.get().strip()
-        lat_st = latitude_entry2.get().strip()
-        try:
-            lon2 = float(lon_st)
-            lat2 = float(lat_st)
-        except ValueError:
-            status_label.config(text="Invalid number", fg="red")
-            return None
-        vehicle_start = (lon2, lat2)
-        longitude_entry2.delete(0, tk.END)
-        latitude_entry2.delete(0, tk.END)
-        status_label.config(text=f"Last added to start: [{lon2:.8f}, {lat2:.8f}]", fg="black")
-        update_display()
-        return vehicle_start
 
     def copy_to_clipboard():
         text = format_coords()
@@ -67,7 +53,7 @@ def main():
 
     root = tk.Tk()
     root.title("Quick Coords Collector")
-    ## Bagian input longitude dan latitude
+
     input_frame = tk.LabelFrame(root, text="Add Coordinate")
     input_frame.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
@@ -97,7 +83,6 @@ def main():
     status_label = tk.Label(root, text="", anchor="w")
     status_label.grid(row=3, column=0, sticky="w", padx=10, pady=(4,0))
 
-    ## bagian output
     output_frame = tk.LabelFrame(root, text="Output")
     output_frame.grid(row=2, column=0, padx=10, pady=10, sticky="we")
 
@@ -105,23 +90,6 @@ def main():
     output_text.pack(fill="both", expand=True)
     output_text.config(state="disabled")
 
-    # bagian posisi berangkat
-    input_frame2 = tk.LabelFrame(root, text="Posisi Awal")
-    input_frame2.grid(row=3, column=0, padx=10, pady=10, sticky="w")
-
-    tk.Label(input_frame2, text="Longitude").grid(row=0, column=0)
-    tk.Label(input_frame2, text="Latitude").grid(row=0, column=1)
-
-    longitude_entry2 = tk.Entry(input_frame2, width=18)
-    latitude_entry2 = tk.Entry(input_frame2, width=18)
-    longitude_entry2.grid(row=4, column=0, padx=5, pady=5)
-    latitude_entry2.grid(row=4, column=1, padx=5, pady=5)
-
-    add_btn2 = tk.Button(input_frame2, text="Set", command=addtostart, width=10)
-    add_btn2.grid(row=4, column=2, padx=5)
-
-    
-    
     # keyboard bindings for quicker usage
     root.bind('<Return>', lambda e: add_coordinate())
 
@@ -129,9 +97,8 @@ def main():
     longitude_entry.focus()
 
     root.mainloop()
-    
-    # Return coords array after GUI is closed
-    return coords
+
 
 if __name__ == '__main__':
-    coords, vehicle_start = main()
+    main()
+
